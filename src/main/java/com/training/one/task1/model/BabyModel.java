@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "baby")
@@ -13,11 +14,17 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class BabyModel {
 
-    @Id
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "human", referencedColumnName = "id")
+    @JoinColumn(name = "human_id", referencedColumnName = "id")
+    private HumanModel humanModel;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_id", referencedColumnName = "human_id")
+    private PregnantMotherModel pregnantMotherModel;
+
+    @Id
     @Column(name = "human_id")
-    private HumanModel human;
+    private Integer humanId;
 
     @Column(name = "is_breast_milk")
     private String isBreastMilk;

@@ -23,7 +23,7 @@ public class BabyService {
     }
 
     public void delete(BabyModel babyModel) {
-        babyRepository.deleteById(babyModel.getHuman().getId());
+        babyRepository.deleteById(babyModel.getHumanId());
     }
 
     public List<BabyModel> findAll() {

@@ -23,7 +23,8 @@ public class PregnantMotherService {
     }
 
     public void delete(PregnantMotherModel pregnantMotherModel) {
-        pregnantMotherRepository.deleteById(pregnantMotherModel.getHuman().getId());
+        pregnantMotherRepository.deleteById(pregnantMotherModel.getHumanModel().getId());
+//        pregnantMotherRepository.deleteById(pregnantMotherModel.getHumanId());
     }
 
     public List<PregnantMotherModel> findAll() {

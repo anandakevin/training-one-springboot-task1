@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "pregnant_mother")
@@ -14,11 +15,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class PregnantMotherModel {
 
-    @Id
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "human", referencedColumnName = "id")
+    @JoinColumn(name = "human_id", referencedColumnName = "id")
+    private HumanModel humanModel;
+
+    @Id
     @Column(name = "human_id")
-    private HumanModel human;
+    private Integer humanId;
 
     @Column(name = "is_smoking")
     private String isSmoking;
