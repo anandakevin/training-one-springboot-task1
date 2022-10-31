@@ -29,5 +29,11 @@ public class HumanService {
         return humanRepository.findAll();
     }
 
+    public HumanModel findById(Integer id) {
+        return humanRepository.findById(id).get();
+    }
 
+    public HumanModel findByName(String name) {
+        return humanRepository.findAllByNameOrderByName(name).get(0);
+    }
 }

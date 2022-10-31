@@ -31,4 +31,8 @@ public class PregnantMotherService {
         return pregnantMotherRepository.findAll();
     }
 
+    public PregnantMotherModel findById(Integer id) {
+        return pregnantMotherRepository.findById(id).get();
+    }
+
 }
