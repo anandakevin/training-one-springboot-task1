@@ -27,11 +27,11 @@ public class BabyModel {
     private Integer humanId;
 
     @Column(name = "is_breast_milk")
-    private String isBreastMilk;
+    private Boolean isBreastMilk;
 
     @Column(name = "is_immunized")
-    private String isImmunized;
+    private Boolean isImmunized;
 
-    @Column(name = "stunting_pontention")
-    private String stuntingPontention;
+    @Column(name = "stunting_potention")
+    private Integer stuntingPotention;
 }

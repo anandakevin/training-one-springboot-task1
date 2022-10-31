@@ -24,11 +24,11 @@ public class PregnantMotherModel {
     private Integer humanId;
 
     @Column(name = "is_smoking")
-    private String isSmoking;
+    private Boolean isSmoking;
 
     @Column(name = "is_vitamin")
-    private String isVitamin;
+    private Boolean isVitamin;
 
     @Column(name = "recommendation")
-    private String recommendation;
+    private Integer recommendation;
 }
