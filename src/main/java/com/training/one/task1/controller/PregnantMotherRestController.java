@@ -34,8 +34,8 @@ public class PregnantMotherRestController {
 
         for (PregnantMotherModel obj : pregnantMotherModelList) {
             Map<String, Object> map2 = oMapper.convertValue(obj, Map.class);
-            Integer recommendationScore = (Integer) map2.get("recommendation");
-            map2.replace("recommendation", recommendationScore, determineRecommendationString(recommendationScore));
+            Integer stuntingPotentionScore = (Integer) map2.get("stunting_potention");
+            map2.replace("stunting_potention", stuntingPotentionScore, determineRecommendationString(stuntingPotentionScore));
             map.add(obj);
         }
 
@@ -49,8 +49,8 @@ public class PregnantMotherRestController {
 //                .collect(Collectors.toMap(PregnantMotherModel::getHumanId, Function.identity()));
 
         Map<String, Object> map = oMapper.convertValue(pregnantMotherModel, Map.class);
-        Integer recommendationScore = (Integer) map.get("recommendation");
-        map.replace("recommendation", recommendationScore, determineRecommendationString(recommendationScore));
+        Integer stuntingPotentionScore = (Integer) map.get("stunting_potention");
+        map.replace("stunting_potention", stuntingPotentionScore, determineRecommendationString(stuntingPotentionScore));
 
         return map;
     }
@@ -71,10 +71,6 @@ public class PregnantMotherRestController {
 //            pregnantMotherModel.setHumanModel(humanModel);
             pregnantMotherModel.setIsSmoking(Boolean.valueOf(payload.get("is_smoking").toString()));
             pregnantMotherModel.setIsVitamin(Boolean.valueOf(payload.get("is_vitamin").toString()));
-//            pregnantMotherModel.setIsVitamin( (Boolean) payload.get("is_vitamin"));
-
-//            LOGGER.info("isSmoking map is {}", payload.get("is_smoking").toString());
-//            LOGGER.info("isVitamin map is {}", payload.get("is_vitamin").toString())
 
             pregnantMotherModel.setRecommendation(determineRecommendation(pregnantMotherModel));
             pregnantMotherModel = pregnantMotherService.insert(pregnantMotherModel);
@@ -158,8 +154,8 @@ public class PregnantMotherRestController {
         else return -1;
     }
 
-    public String determineRecommendationString(Integer recommendationScore) {
-        switch (recommendationScore) {
+    public String determineRecommendationString(Integer stuntingPotentionScore) {
+        switch (stuntingPotentionScore) {
             case 0:
                 return "Baik";
             case 1:
