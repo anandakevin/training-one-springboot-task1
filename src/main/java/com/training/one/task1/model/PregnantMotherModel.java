@@ -4,6 +4,7 @@ package com.training.one.task1.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,10 +13,11 @@ import java.util.List;
 @Table(name = "pregnant_mother")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class PregnantMotherModel {
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "human_id", referencedColumnName = "id")
     private HumanModel humanModel;
 

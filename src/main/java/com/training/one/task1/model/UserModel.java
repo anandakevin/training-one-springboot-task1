@@ -3,6 +3,7 @@ package com.training.one.task1.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -10,13 +11,14 @@ import javax.persistence.*;
 @Table(name = "user")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class UserModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "username")
     private String username;
