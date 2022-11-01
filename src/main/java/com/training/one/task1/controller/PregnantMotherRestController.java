@@ -3,7 +3,6 @@ package com.training.one.task1.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.training.one.task1.model.HumanModel;
 import com.training.one.task1.model.PregnantMotherModel;
-import com.training.one.task1.repository.PregnantMotherRepository;
 import com.training.one.task1.service.HumanService;
 import com.training.one.task1.service.PregnantMotherService;
 import org.slf4j.Logger;
@@ -12,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("pregnantmother")
@@ -22,10 +19,10 @@ public class PregnantMotherRestController {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    PregnantMotherService pregnantMotherService;
+    private PregnantMotherService pregnantMotherService;
 
     @Autowired
-    HumanService humanService;
+    private HumanService humanService;
 
     ObjectMapper oMapper = new ObjectMapper();
 
@@ -46,7 +43,7 @@ public class PregnantMotherRestController {
     }
 
     @GetMapping("/findById")
-    public Map findById(@RequestParam("id") Integer id) {
+    public Object findById(@RequestParam("id") Integer id) {
         PregnantMotherModel pregnantMotherModel = pregnantMotherService.findById(id);
 //        Map<Integer, Object> map = pregnantMotherModel
 //                .collect(Collectors.toMap(PregnantMotherModel::getHumanId, Function.identity()));
@@ -71,10 +68,19 @@ public class PregnantMotherRestController {
 
             PregnantMotherModel pregnantMotherModel = new PregnantMotherModel();
             pregnantMotherModel.setHumanId(humanModel.getId());
-            pregnantMotherModel.setIsSmoking(Boolean.getBoolean(payload.get("is_smoking").toString()));
-            pregnantMotherModel.setIsVitamin(Boolean.getBoolean(payload.get("is_vitamin").toString()));
+//            pregnantMotherModel.setHumanModel(humanModel);
+            pregnantMotherModel.setIsSmoking(Boolean.valueOf(payload.get("is_smoking").toString()));
+            pregnantMotherModel.setIsVitamin(Boolean.valueOf(payload.get("is_vitamin").toString()));
+//            pregnantMotherModel.setIsVitamin( (Boolean) payload.get("is_vitamin"));
+
+//            LOGGER.info("isSmoking map is {}", payload.get("is_smoking").toString());
+//            LOGGER.info("isVitamin map is {}", payload.get("is_vitamin").toString())
+
             pregnantMotherModel.setRecommendation(determineRecommendation(pregnantMotherModel));
-            return pregnantMotherService.insert(pregnantMotherModel);
+            pregnantMotherModel = pregnantMotherService.insert(pregnantMotherModel);
+//            pregnantMotherModel.getHumanModel();
+            return pregnantMotherModel;
+//            return pregnantMotherService.insert(pregnantMotherModel);
 
         } catch (Exception e) {
             LOGGER.error("Exception happened: " + e);
@@ -110,8 +116,8 @@ public class PregnantMotherRestController {
                     humanModel = humanService.update(humanModel);
 
                     pregnantMotherModel.setHumanId(humanModel.getId());
-                    pregnantMotherModel.setIsSmoking(Boolean.getBoolean(payload.get("is_smoking").toString()));
-                    pregnantMotherModel.setIsVitamin(Boolean.getBoolean(payload.get("is_vitamin").toString()));
+                    pregnantMotherModel.setIsSmoking(Boolean.valueOf(payload.get("is_smoking").toString()));
+                    pregnantMotherModel.setIsVitamin(Boolean.valueOf(payload.get("is_vitamin").toString()));
                     pregnantMotherModel.setRecommendation(determineRecommendation(pregnantMotherModel));
                     return pregnantMotherService.update(pregnantMotherModel);
                 } else return null;
@@ -125,21 +131,21 @@ public class PregnantMotherRestController {
     }
 
     @PostMapping("/delete")
-    public String delete(@RequestBody Map payload) {
+    public PregnantMotherModel delete(@RequestBody Map payload) {
         try {
             if (payload.containsKey("human_id")) {
                 PregnantMotherModel pregnantMotherModel = pregnantMotherService.findById((Integer) payload.get("human_id"));
                 pregnantMotherService.delete(pregnantMotherModel);
-                return "Success";
+                return pregnantMotherModel;
             } else if (payload.containsKey("human_name")) {
                 HumanModel humanModel = humanService.findByName((String) payload.get("human_name"));
                 PregnantMotherModel pregnantMotherModel = pregnantMotherService.findById(humanModel.getId());
                 pregnantMotherService.delete(pregnantMotherModel);
-                return "Success";
-            } else return "Invalid Request";
+                return pregnantMotherModel;
+            } else return null;
         } catch (Exception e) {
             LOGGER.error("Exception happened: " + e);
-            return "Error occured";
+            return null;
         }
     }
 
@@ -165,6 +171,5 @@ public class PregnantMotherRestController {
                 return "Invalid";
         }
     }
-
 
 }
