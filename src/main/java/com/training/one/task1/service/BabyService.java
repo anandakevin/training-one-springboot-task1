@@ -1,6 +1,7 @@
 package com.training.one.task1.service;
 
 import com.training.one.task1.model.BabyModel;
+import com.training.one.task1.model.PregnantMotherModel;
 import com.training.one.task1.repository.BabyRepository;
 import com.training.one.task1.repository.HumanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,15 @@ public class BabyService {
     }
 
     public void delete(BabyModel babyModel) {
-        babyRepository.deleteById(babyModel.getHumanId());
+        babyRepository.deleteById(babyModel.getHumanModel().getId());
     }
 
     public List<BabyModel> findAll() {
         return babyRepository.findAll();
+    }
+
+    public BabyModel findById(Integer id) {
+        return babyRepository.findById(id).get();
     }
 
 }
