@@ -3,6 +3,7 @@ package com.training.one.task1.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.training.one.task1.model.HumanModel;
 import com.training.one.task1.model.PregnantMotherModel;
+import com.training.one.task1.repository.PregnantMotherRepository;
 import com.training.one.task1.service.HumanService;
 import com.training.one.task1.service.PregnantMotherService;
 import org.slf4j.Logger;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("pregnantmother")
@@ -19,10 +22,10 @@ public class PregnantMotherRestController {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private PregnantMotherService pregnantMotherService;
+    PregnantMotherService pregnantMotherService;
 
     @Autowired
-    private HumanService humanService;
+    HumanService humanService;
 
     ObjectMapper oMapper = new ObjectMapper();
 
@@ -34,8 +37,8 @@ public class PregnantMotherRestController {
 
         for (PregnantMotherModel obj : pregnantMotherModelList) {
             Map<String, Object> map2 = oMapper.convertValue(obj, Map.class);
-            Integer stuntingPotentionScore = (Integer) map2.get("stunting_potention");
-            map2.replace("stunting_potention", stuntingPotentionScore, determineRecommendationString(stuntingPotentionScore));
+            Integer recommendationScore = (Integer) map2.get("recommendation");
+            map2.replace("recommendation", recommendationScore, determineRecommendationString(recommendationScore));
             map.add(obj);
         }
 
@@ -43,14 +46,14 @@ public class PregnantMotherRestController {
     }
 
     @GetMapping("/findById")
-    public Object findById(@RequestParam("id") Integer id) {
+    public Map findById(@RequestParam("id") Integer id) {
         PregnantMotherModel pregnantMotherModel = pregnantMotherService.findById(id);
 //        Map<Integer, Object> map = pregnantMotherModel
 //                .collect(Collectors.toMap(PregnantMotherModel::getHumanId, Function.identity()));
 
         Map<String, Object> map = oMapper.convertValue(pregnantMotherModel, Map.class);
-        Integer stuntingPotentionScore = (Integer) map.get("stunting_potention");
-        map.replace("stunting_potention", stuntingPotentionScore, determineRecommendationString(stuntingPotentionScore));
+        Integer recommendationScore = (Integer) map.get("recommendation");
+        map.replace("recommendation", recommendationScore, determineRecommendationString(recommendationScore));
 
         return map;
     }
@@ -68,15 +71,10 @@ public class PregnantMotherRestController {
 
             PregnantMotherModel pregnantMotherModel = new PregnantMotherModel();
             pregnantMotherModel.setHumanId(humanModel.getId());
-//            pregnantMotherModel.setHumanModel(humanModel);
             pregnantMotherModel.setIsSmoking(Boolean.valueOf(payload.get("is_smoking").toString()));
             pregnantMotherModel.setIsVitamin(Boolean.valueOf(payload.get("is_vitamin").toString()));
-
             pregnantMotherModel.setRecommendation(determineRecommendation(pregnantMotherModel));
-            pregnantMotherModel = pregnantMotherService.insert(pregnantMotherModel);
-//            pregnantMotherModel.getHumanModel();
-            return pregnantMotherModel;
-//            return pregnantMotherService.insert(pregnantMotherModel);
+            return pregnantMotherService.insert(pregnantMotherModel);
 
         } catch (Exception e) {
             LOGGER.error("Exception happened: " + e);
@@ -127,7 +125,7 @@ public class PregnantMotherRestController {
     }
 
     @PostMapping("/delete")
-    public PregnantMotherModel delete(@RequestBody Map payload) {
+    public Object delete(@RequestBody Map payload) {
         try {
             if (payload.containsKey("human_id")) {
                 PregnantMotherModel pregnantMotherModel = pregnantMotherService.findById((Integer) payload.get("human_id"));
@@ -154,8 +152,8 @@ public class PregnantMotherRestController {
         else return -1;
     }
 
-    public String determineRecommendationString(Integer stuntingPotentionScore) {
-        switch (stuntingPotentionScore) {
+    public String determineRecommendationString(Integer recommendationScore) {
+        switch (recommendationScore) {
             case 0:
                 return "Baik";
             case 1:
@@ -167,5 +165,6 @@ public class PregnantMotherRestController {
                 return "Invalid";
         }
     }
+
 
 }
